@@ -85,21 +85,17 @@ jobs:
           rustup --version
       - name: Environment Information
         run: npx envinfo
-      - name: Build
-        run: ./vcbuild.bat clang-cl v8temporal
-      # TODO(bcoe): investigate tests that fail with coverage enabled
-      # on Windows.
-      - name: Test
-        run: ./vcbuild.bat noprojgen nobuild test-ci-js; node -e 'process.exit(0)'
-        env:
-          NODE_V8_COVERAGE: ./coverage/tmp
-      - name: Report
-        run: npx c8 report
-        env:
-          NODE_OPTIONS: --max-old-space-size=8192
-      - name: Clean tmp
-        run: npx rimraf ./coverage/tmp
-      - name: Upload
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2  # v6.0.0
-        with:
-          directory: ./coverage
+      - name: dump autocrlf
+        run: git config core.autocrlf
+      - name: dump js example
+        run: ([System.IO.File]::OpenRead("test\fixtures\snapshot\ts-example.js")).Read(( $b = New-Object byte[] 50),0,50) > $null; $b
+      - name: dump ts example
+        run: ([System.IO.File]::OpenRead("test\fixtures\snapshot\ts-example.ts")).Read(( $b = New-Object byte[] 23),0,23) > $null; $b
+      #- name: Build
+      #  run: ./vcbuild.bat clang-cl v8temporal
+      ## TODO(bcoe): investigate tests that fail with coverage enabled
+      ## on Windows.
+      #- name: Test
+      #  run: out/Release/node.exe test/parallel/test-snapshot-typescript.js
+      #  env:
+      #    NODE_V8_COVERAGE: ./coverage/tmp
