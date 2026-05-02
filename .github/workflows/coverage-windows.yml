@@ -93,7 +93,11 @@ jobs:
         run: ./vcbuild.bat clang-cl v8temporal
       # TODO(bcoe): investigate tests that fail with coverage enabled
       # on Windows.
-      - name: Test
+      - name: Test symlinks
         run: out/Release/node.exe test/parallel/test-child-process-exec-any-shells-windows.js
+        env:
+          NODE_V8_COVERAGE: ./coverage/tmp
+      - name: Test typescript
+        run: out/Release/node.exe test/parallel/test-snapshot-typescript.js
         env:
           NODE_V8_COVERAGE: ./coverage/tmp
