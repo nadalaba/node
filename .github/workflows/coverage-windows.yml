@@ -85,12 +85,10 @@ jobs:
           rustup --version
       - name: Environment Information
         run: npx envinfo
-      - name: dump autocrlf
-        run: git config core.autocrlf
-      - name: dump js example
-        run: ([System.IO.File]::OpenRead("test\fixtures\snapshot\ts-example.js")).Read(( $b = New-Object byte[] 50),0,50) > $null; $b
-      - name: dump ts example
-        run: ([System.IO.File]::OpenRead("test\fixtures\snapshot\ts-example.ts")).Read(( $b = New-Object byte[] 23),0,23) > $null; $b
+      - name: setup wsl
+        uses: Vampire/setup-wsl@v7
+      - name: look for bash
+        run: where.exe bash
       #- name: Build
       #  run: ./vcbuild.bat clang-cl v8temporal
       ## TODO(bcoe): investigate tests that fail with coverage enabled
