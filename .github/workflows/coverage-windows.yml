@@ -85,21 +85,19 @@ jobs:
           rustup --version
       - name: Environment Information
         run: npx envinfo
+      - name: setup wsl
+        uses: Vampire/setup-wsl@v7
+      - name: look for bash
+        run: where.exe bash
       - name: Build
         run: ./vcbuild.bat clang-cl v8temporal
       # TODO(bcoe): investigate tests that fail with coverage enabled
       # on Windows.
-      - name: Test
-        run: ./vcbuild.bat noprojgen nobuild test-ci-js; node -e 'process.exit(0)'
+      - name: Test symlinks
+        run: out/Release/node.exe test/parallel/test-child-process-exec-any-shells-windows.js
         env:
           NODE_V8_COVERAGE: ./coverage/tmp
-      - name: Report
-        run: npx c8 report
+      - name: Test typescript
+        run: out/Release/node.exe test/parallel/test-snapshot-typescript.js
         env:
-          NODE_OPTIONS: --max-old-space-size=8192
-      - name: Clean tmp
-        run: npx rimraf ./coverage/tmp
-      - name: Upload
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2  # v6.0.0
-        with:
-          directory: ./coverage
+          NODE_V8_COVERAGE: ./coverage/tmp

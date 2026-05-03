@@ -39,7 +39,7 @@ fs.appendFileSync(file,
   const stats = fs.statSync(tmpdir.resolve('snapshot.blob'));
   assert(stats.isFile());
 }
-
+console.log({platform: process.platform});
 {
   const outPath = tmpdir.resolve('ts-example.js');
   const child = spawnSync(process.execPath, [
